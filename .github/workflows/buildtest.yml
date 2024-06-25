@@ -32,4 +32,13 @@ jobs:
 
       - name: Build
         run: npm run build
-      
+        
+      - name: Run
+        run: npm run serve
+        
+      - name: wait
+        run: sleep 15
+
+      - name: test localhost
+        run: curl -s http://localhost:8080 | grep "<div id="app"></div>"
+        
