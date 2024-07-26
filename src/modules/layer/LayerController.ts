@@ -16,13 +16,15 @@ import Stroke from 'ol/style/Stroke';
 
 export class LayerController {
   private readonly wli: WmtsLibIdentifer;
-  private readonly layers: (Layer3D | LayerCartesian | LayerProjection | Graticule)[];
+  private readonly layers: Array<
+    Layer3D | LayerCartesian | LayerProjection | Graticule
+  >;
 
   constructor(
     private readonly rootUrl: string,
-    private readonly projCode: ProjCodes,
-    //private readonly extent: [number, number, number, number]
-  ) {
+    private readonly projCode: ProjCodes
+  ) //private readonly extent: [number, number, number, number]
+  {
     if (this.projCode === 'XY') {
       this.wli = new WmtsLibIdentifer('XY');
       this.layers = new Array<LayerCartesian>();

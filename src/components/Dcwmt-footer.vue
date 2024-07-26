@@ -64,7 +64,13 @@ export default Vue.extend({
         return;
       }
 
-      const drawingOptions = { ...this.drawingOptions, sumneil, title, center, zoom };
+      const drawingOptions = {
+        ...this.drawingOptions,
+        sumneil,
+        title,
+        center,
+        zoom,
+      };
       const definedOptions = this.definedOptions;
       const confFile = { definedOptions, drawingOptions };
 

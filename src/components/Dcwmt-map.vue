@@ -22,7 +22,6 @@ import { Graticule } from 'ol/layer';
 export default Vue.extend({
   components: {
     layerselecter,
-    //    ruler,
   },
   computed: {
     drawingOptions: {
@@ -106,7 +105,7 @@ export default Vue.extend({
       );
       const layerController = new LayerController(
         this.definedOptions.root,
-        this.drawingOptions.projCode,
+        this.drawingOptions.projCode
         //extent
       );
 

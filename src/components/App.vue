@@ -50,10 +50,10 @@ export default Vue.extend({
     },
   },
   computed: {
-    viewerController: function(): ViewerController | undefined {
+    viewerController: function (): ViewerController | undefined {
       // @ts-ignore
       return this.$refs.map?.viewerController;
-    }
-  }
+    },
+  },
 });
 </script>

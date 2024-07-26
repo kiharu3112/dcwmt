@@ -108,7 +108,7 @@ export default Vue.extend({
         const fixedNamesIndex = fixedNames.findIndex((v) => v === slider.title);
         console.log(shapedFixed);
         fixedIndex = shapedFixed.findIndex(
-          (v) => v[fixedNamesIndex] === newFixed  
+          (v) => v[fixedNamesIndex] === newFixed
         );
         console.log(fixedIndex);
       }
@@ -189,5 +189,4 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
