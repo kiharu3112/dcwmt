@@ -2,7 +2,7 @@ export interface LayerInterface {
   // レイヤーの名前
   name: string;
   // 固定する次元の軸
-  fixed: string; 
+  fixed: string;
   // レイヤーの表示, 非表示
   show: boolean;
   // レイヤーの透明度

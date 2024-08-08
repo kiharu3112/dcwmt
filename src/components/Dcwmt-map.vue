@@ -17,11 +17,11 @@ import type {
 import { Map } from '../modules/viewer/map';
 import { ViewerController } from '../modules/viewer/ViewerController';
 import { LayerController } from '../modules/layer/LayerController';
+import { Graticule } from 'ol/layer';
 
 export default Vue.extend({
   components: {
     layerselecter,
-    //    ruler,
   },
   computed: {
     drawingOptions: {
@@ -84,9 +84,9 @@ export default Vue.extend({
         layerController.add(layer);
       }
 
-      //const extent = this.definedOptions.variables[0].extent;
-      //const graticule = layerController.graticule(extent);
-      //layerController.add(graticule);
+      const extent = this.definedOptions.variables[0].extent;
+      const graticule: Graticule = layerController.graticule(extent);
+      layerController.add(graticule);
 
       viewer.register(layerController);
     },
@@ -95,6 +95,7 @@ export default Vue.extend({
         throw new Error('definedOptions is undefined');
       }
       const zoomNativeLevel = this.getZoomNativeLevel(this.definedOptions);
+      //const extent = this.definedOptions.variables[0].extent;
 
       const viewerController = new ViewerController(
         this.drawingOptions.projCode,
@@ -105,6 +106,7 @@ export default Vue.extend({
       const layerController = new LayerController(
         this.definedOptions.root,
         this.drawingOptions.projCode
+        //extent
       );
 
       return { viewerController, layerController };

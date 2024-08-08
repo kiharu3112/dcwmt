@@ -16,21 +16,24 @@ import Stroke from 'ol/style/Stroke';
 
 export class LayerController {
   private readonly wli: WmtsLibIdentifer;
-  private readonly bundler: (Layer3D | LayerCartesian | LayerProjection)[];
+  private readonly layers: Array<
+    Layer3D | LayerCartesian | LayerProjection | Graticule
+  >;
 
   constructor(
     private readonly rootUrl: string,
     private readonly projCode: ProjCodes
-  ) {
+  ) //private readonly extent: [number, number, number, number]
+  {
     if (this.projCode === 'XY') {
       this.wli = new WmtsLibIdentifer('XY');
-      this.bundler = new Array<LayerCartesian>();
+      this.layers = new Array<LayerCartesian>();
     } else if (this.projCode === '3d Sphere') {
       this.wli = new WmtsLibIdentifer('3d Sphere');
-      this.bundler = new Array<Layer3D>();
+      this.layers = new Array<Layer3D>();
     } else {
       this.wli = new WmtsLibIdentifer('Projections');
-      this.bundler = new Array<LayerProjection>();
+      this.layers = new Array<LayerProjection>();
     }
   }
 
@@ -78,7 +81,7 @@ export class LayerController {
     return layer;
   };
 
-  public graticule = (extent: [number, number, number, number]) => {
+  public graticule = (extent: [number, number, number, number]): Graticule => {
     console.log(extent);
     const lonLabelFormatter = (n: number): string => {
       return n.toString();
@@ -126,12 +129,12 @@ export class LayerController {
     return await diagramObj.calcMinMax(level0Url, canvas);
   };
 
-  public add = (layer: Layer3D | LayerCartesian | LayerProjection) => {
-    return this.bundler.push(layer);
-  };
+  public add(layer: Layer3D | LayerCartesian | LayerProjection | Graticule) {
+    return this.layers.push(layer);
+  }
 
   public get = () => {
-    return this.bundler;
+    return this.layers;
   };
 
   private getLayerWithSuitableLib = (
