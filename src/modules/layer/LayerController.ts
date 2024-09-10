@@ -11,12 +11,17 @@ import { VectorDiagram } from './diagram/vectorDiagram';
 import { Diagram } from './diagram/diagram';
 import { DiagramTypes } from '../../dcmwtconfType';
 
-import Graticule from 'ol/layer/Graticule';
 import Stroke from 'ol/style/Stroke';
+import Graticule from 'ol/layer/Graticule';
 
 export class LayerController {
   private readonly wli: WmtsLibIdentifer;
-  private readonly bundler: (Layer3D | LayerCartesian | LayerProjection)[];
+  private readonly bundler: (
+    | Layer3D
+    | LayerCartesian
+    | LayerProjection
+    | Graticule
+  )[];
 
   constructor(
     private readonly rootUrl: string,
@@ -45,9 +50,9 @@ export class LayerController {
     show: boolean,
     opacity: number,
     minmax: [number, number] | undefined,
-    diagramProp: number | { x: number; y: number }
+    diagramProp: number | { x: number; y: number } | null
   ) => {
-    let diagramObj: Diagram;
+    let diagramObj: Diagram | null;
     if (type === 'tone') {
       const clrindex = diagramProp as number;
       diagramObj = new ToneDiagram(clrindex, mathMethod, minmax);
@@ -58,9 +63,11 @@ export class LayerController {
       diagramObj = new ContourDiagram(thretholdinterval, mathMethod, minmax);
       const temp_url_ary = url_ary.map((v) => v.concat(`/${fixed}`));
       minmax = await this.getMinMax(temp_url_ary, tileSize, diagramObj);
-    } else {
+    } else if (type === 'vector') {
       const vecinterval = diagramProp as { x: number; y: number };
       diagramObj = new VectorDiagram(vecinterval, mathMethod);
+    } else {
+      throw new Error('Invalid diagram type');
     }
     const layer = this.getLayerWithSuitableLib(
       name,
@@ -70,46 +77,11 @@ export class LayerController {
       zoomLevel,
       show,
       opacity,
-      diagramObj
+      diagramObj!
     );
     //@ts-ignore
     layer.minmax = minmax;
-
     return layer;
-  };
-
-  public graticule = (extent: [number, number, number, number]) => {
-    console.log(extent);
-    const lonLabelFormatter = (n: number): string => {
-      return n.toString();
-    };
-    const latLabelFormatter = (n: number): string => {
-      return n.toString();
-    };
-    const projections = () =>
-      new Graticule({
-        strokeStyle: new Stroke({
-          color: 'rgba(0, 255, 0, 0.9)',
-          width: 3,
-          lineDash: [0.5, 4],
-        }),
-        showLabels: true,
-        lonLabelFormatter: lonLabelFormatter,
-        latLabelFormatter: latLabelFormatter,
-      });
-    const sphere = () =>
-      new Graticule({
-        strokeStyle: new Stroke({
-          color: 'rgba(0, 255, 0, 0.9)',
-          width: 3,
-          lineDash: [0.5, 4],
-        }),
-        showLabels: true,
-        lonLabelFormatter: lonLabelFormatter,
-        latLabelFormatter: latLabelFormatter,
-      });
-    const suitableFunc = this.wli.whichLib(projections, sphere, projections);
-    return suitableFunc();
   };
 
   private getMinMax = async (
@@ -126,7 +98,9 @@ export class LayerController {
     return await diagramObj.calcMinMax(level0Url, canvas);
   };
 
-  public add = (layer: Layer3D | LayerCartesian | LayerProjection) => {
+  public add = (
+    layer: Layer3D | LayerCartesian | LayerProjection | Graticule
+  ) => {
     return this.bundler.push(layer);
   };
 
@@ -171,4 +145,28 @@ export class LayerController {
 
     return suitableFunc();
   };
+  public createGraticule(show: boolean, opacity: number): Graticule {
+    const lonLabelFormatter = (n: number): string => {
+      n = (n + 180) % 360;
+      return n.toString();
+    };
+    const latLabelFormatter = (n: number): string => {
+      return n.toString();
+    };
+    const graticule = new Graticule({
+      showLabels: show,
+      strokeStyle: new Stroke({
+        color: 'rgba(100, 255, 100, 1)',
+        width: 2,
+        lineDash: [0.5, 4],
+      }),
+      lonLabelFormatter: lonLabelFormatter,
+      latLabelFormatter: latLabelFormatter,
+      opacity: opacity
+    });
+    graticule.setVisible(show);
+    graticule.setOpacity(opacity);
+    
+    return graticule;
+  }
 }

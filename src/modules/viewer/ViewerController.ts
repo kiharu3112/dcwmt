@@ -1,8 +1,6 @@
 import { WmtsLibIdentifer } from '../utility/wmtsLibIdentifer';
 import { Viewer3D } from './lib/viewer3D';
-// import { viewerCartesian } from './lib/viewerCartesian';
 import { ViewerProjection } from './lib/viewerProjection';
-
 import { ProjCodes } from '../../components/DrawerContents/Drawer-figure/projection_lib';
 
 export class ViewerController {

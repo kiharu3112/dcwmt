@@ -50,6 +50,7 @@ export class Viewer3D extends Viewer implements ViewerInterface {
   public updateLayers = (layers: LayerTypes[]) => {
     const baseLayers = this.imageryLayers;
     if (baseLayers.length !== layers.length) {
+      console.error('The number of layers is different.');
       return;
     }
     for (let i = 0; i < baseLayers.length; i++) {
@@ -103,6 +104,15 @@ export class Viewer3D extends Viewer implements ViewerInterface {
             baseLayers.remove(purposeLayer, false);
             (purposeLayer.imageryProvider as Layer3D).vectorInterval =
               layer.vecinterval;
+            baseLayers.add(purposeLayer, i);
+            break;
+          }
+        } else if (layer.type === 'graticule') {
+          if (
+            layer.show !== layer.show
+          ) {
+            baseLayers.remove(purposeLayer, false);
+            (purposeLayer.imageryProvider as Layer3D).show = layer.show;
             baseLayers.add(purposeLayer, i);
             break;
           }
