@@ -7,7 +7,7 @@
     <v-main app>
       <dcwmt_map />
     </v-main>
-    <v-footer app>
+    <v-footer app id="footer">
       <dcwmt_footer :viewerController="viewerController" />
     </v-footer>
   </v-app>
@@ -57,3 +57,9 @@ export default Vue.extend({
   }
 });
 </script>
+
+<style>
+#footer {
+  height: 85px;
+}
+</style>

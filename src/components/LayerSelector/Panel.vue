@@ -106,6 +106,9 @@
                   v-model="layer.vecinterval.y"
                 />
               </div>
+              <div v-if="layer.type === 'graticule'">
+                
+              </div>
             </v-card-text>
           </v-card>
         </v-col>

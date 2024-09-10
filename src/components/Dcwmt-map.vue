@@ -21,7 +21,6 @@ import { LayerController } from '../modules/layer/LayerController';
 export default Vue.extend({
   components: {
     layerselecter,
-    //    ruler,
   },
   computed: {
     drawingOptions: {
@@ -76,6 +75,14 @@ export default Vue.extend({
       const viewer = viewerController.create(mapEl)!;
 
       for (const layerOption of this.drawingOptions.layers) {
+        if (layerOption.type === 'graticule') {
+          const graticule = layerController.createGraticule(
+            layerOption.show,
+            layerOption.opacity
+          );
+          layerController.add(graticule);
+          continue;
+        }
         const props = this.createPropsForCreateLayerMethod(
           layerOption,
           this.definedOptions.variables
@@ -83,11 +90,6 @@ export default Vue.extend({
         const layer = await layerController.create(...props);
         layerController.add(layer);
       }
-
-      //const extent = this.definedOptions.variables[0].extent;
-      //const graticule = layerController.graticule(extent);
-      //layerController.add(graticule);
-
       viewer.register(layerController);
     },
     createController() {
@@ -123,6 +125,8 @@ export default Vue.extend({
             return layer.vecinterval;
           case 'contour':
             return layer.thretholdinterval;
+          case 'graticule':
+            return null;
         }
       })();
 
@@ -155,7 +159,6 @@ export default Vue.extend({
           if (zoom === undefined || !center) {
             throw new Error('zoom / center is undefined');
           }
-          //@ts-ignore
           this.drawingOptions = { ...this.drawingOptions, zoom, center };
 
           const controller = this.createController();

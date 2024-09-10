@@ -38,7 +38,7 @@ export class Layer3D
     }
 
     const canvas = document.createElement('canvas');
-    [canvas.width, canvas.height] = [this.tileWidth, super.tileHeight];
+    [canvas.width, canvas.height] = [this.tileWidth, this.tileHeight];
 
     const drawnCanvas = this.diagram.draw(urls, canvas);
     return drawnCanvas;

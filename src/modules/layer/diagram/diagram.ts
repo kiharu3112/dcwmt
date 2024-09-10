@@ -140,9 +140,10 @@ export abstract class Diagram {
     return new Promise((resolve) => resolve(this.minmax));
   };
 
-  public abstract whichDiagram<T, U, V>(
+  public abstract whichDiagram<T, U, V, G>(
     tone: T,
     contour: U,
-    vector: V
-  ): T | U | V;
+    vector: V,
+    graticule: G
+  ): T | U | V | G;
 }

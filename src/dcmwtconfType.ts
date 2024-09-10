@@ -1,6 +1,5 @@
 import { ProjCodes } from './components/DrawerContents/Drawer-figure/projection_lib';
-
-const types = ['tone', 'vector', 'contour'] as const;
+const types = ['tone', 'vector', 'contour', 'graticule'] as const;
 export type DiagramTypes = typeof types[number];
 
 export type Variable = {
@@ -41,8 +40,10 @@ type LayerContour = Layer & {
   type: 'contour';
   thretholdinterval: number;
 };
-
-export type LayerTypes = LayerTone | LayerVector | LayerContour;
+type Graticule = Layer & {
+  type: 'graticule';
+};
+export type LayerTypes = LayerTone | LayerVector | LayerContour | Graticule;
 
 export type DefinedOptions = Readonly<{
   root: string;

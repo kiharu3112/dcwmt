@@ -126,6 +126,7 @@ export class ViewerProjection extends Map implements ViewerInterface {
           if (baseLayers[i].colorIndex !== layer.clrindex) {
             baseLayers[i].colorIndex = layer.clrindex;
             break;
+            console.log('tone visible is changed');
           }
         } else if (layer.type === 'contour') {
           if (baseLayers[i].thresholdInterval !== layer.thretholdinterval) {
@@ -140,6 +141,7 @@ export class ViewerProjection extends Map implements ViewerInterface {
             baseLayers[i].vectorInterval = layer.vecinterval;
             break;
           }
+        } else if (layer.type === 'graticule') {
         }
       } else {
         const j = baseLayers.map((l) => l.name).indexOf(layer.name);
