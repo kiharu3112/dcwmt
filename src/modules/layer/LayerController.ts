@@ -2,7 +2,6 @@ import { ProjCodes } from '../../components/DrawerContents/Drawer-figure/project
 import { WmtsLibIdentifer } from '../utility/wmtsLibIdentifer';
 
 import { Layer3D } from './lib/layer3D';
-import { LayerCartesian } from '../layer/lib/layerCartesian';
 import { LayerProjection } from './lib/layerProjection';
 
 import { ToneDiagram } from './diagram/toneDiagram';
@@ -16,15 +15,15 @@ import Stroke from 'ol/style/Stroke';
 
 export class LayerController {
   private readonly wli: WmtsLibIdentifer;
-  private readonly bundler: (Layer3D | LayerCartesian | LayerProjection)[];
+  private readonly bundler: (Layer3D | LayerProjection)[];
 
   constructor(
     private readonly rootUrl: string,
     private readonly projCode: ProjCodes
   ) {
     if (this.projCode === 'XY') {
-      this.wli = new WmtsLibIdentifer('XY');
-      this.bundler = new Array<LayerCartesian>();
+      this.wli = new WmtsLibIdentifer('Projections');
+      this.bundler = new Array<LayerProjection>();
     } else if (this.projCode === '3d Sphere') {
       this.wli = new WmtsLibIdentifer('3d Sphere');
       this.bundler = new Array<Layer3D>();
@@ -108,7 +107,7 @@ export class LayerController {
         lonLabelFormatter: lonLabelFormatter,
         latLabelFormatter: latLabelFormatter,
       });
-    const suitableFunc = this.wli.whichLib(projections, sphere, projections);
+    const suitableFunc = this.wli.whichLib(projections, sphere);
     return suitableFunc();
   };
 
@@ -126,7 +125,7 @@ export class LayerController {
     return await diagramObj.calcMinMax(level0Url, canvas);
   };
 
-  public add = (layer: Layer3D | LayerCartesian | LayerProjection) => {
+  public add = (layer: Layer3D | LayerProjection) => {
     return this.bundler.push(layer);
   };
 
@@ -143,7 +142,7 @@ export class LayerController {
     show: boolean,
     opacity: number,
     diagramObj: Diagram
-  ): Layer3D | LayerCartesian | LayerProjection => {
+  ): Layer3D | LayerProjection => {
     const props = [
       name,
       url_ary,
@@ -154,20 +153,9 @@ export class LayerController {
       opacity,
       diagramObj,
     ] as const;
-    const xy = () =>
-      new LayerCartesian(
-        name,
-        url_ary,
-        fixed,
-        tileSize,
-        zoomLevel,
-        show,
-        opacity,
-        diagramObj
-      );
     const sphere = () => new Layer3D(...props);
     const projections = () => new LayerProjection(...props);
-    const suitableFunc = this.wli.whichLib(xy, sphere, projections);
+    const suitableFunc = this.wli.whichLib(sphere, projections);
 
     return suitableFunc();
   };

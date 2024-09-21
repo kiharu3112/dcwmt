@@ -15,10 +15,10 @@ export class ViewerController {
     private readonly zoom: number,
     private readonly center: [number, number]
   ) {
-    if (this.projCode !== 'XY' && this.projCode !== '3d Sphere') {
-      this.wli = new WmtsLibIdentifer('Projections');
-    } else {
+    if (this.projCode === '3d Sphere') {
       this.wli = new WmtsLibIdentifer(this.projCode);
+    } else {
+      this.wli = new WmtsLibIdentifer('Projections');
     }
   }
 
@@ -39,10 +39,9 @@ export class ViewerController {
       this.zoom,
       this.center,
     ] as const;
-    const xy = () => new ViewerProjection(...prop);
     const sphere = () => new Viewer3D(mapEl, this.center);
     const projections = () => new ViewerProjection(...prop);
-    const suitableFunc = this.wli.whichLib(xy, sphere, projections);
+    const suitableFunc = this.wli.whichLib(sphere, projections);
     return suitableFunc();
   };
 }
