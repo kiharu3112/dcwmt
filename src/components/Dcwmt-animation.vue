@@ -30,8 +30,8 @@
 </template>
 
 <script lang="ts">
-import { DefinedOptions, DrawingOptions, LayerTypes } from '@/dcmwtconfType';
-import Vue from 'vue';
+import type { DefinedOptions, DrawingOptions, LayerTypes } from "@/dcmwtconfType";
+import Vue from "vue";
 
 type Slider = {
   title: string;
@@ -66,7 +66,7 @@ export default Vue.extend({
       sliders: new Array<Slider>(),
       intervalID: 0,
       sec_per_frame: 2,
-      name: '',
+      name: "",
       length: 0,
       defaultSliderValue: { value: 0, min: 0, max: 0, step: 1, clicked: false },
       oldLayers: undefined,
@@ -79,7 +79,7 @@ export default Vue.extend({
         return this.$store.getters.drawingOptions;
       },
       set: function (value: DrawingOptions) {
-        this.$store.commit('setDrawingOptions', value);
+        this.$store.commit("setDrawingOptions", value);
       },
     },
     layersID: function (): string | undefined {
@@ -92,24 +92,22 @@ export default Vue.extend({
     },
   },
   methods: {
-    changeURL: function (sliderIndex: number, hasIncrement: boolean = false) {
+    changeURL: function (sliderIndex: number, hasIncrement = false) {
       const slider = this.sliders[sliderIndex];
       const newFixed = `${slider.title}=${slider.tick_label[slider.value]}`;
       const lenOfLayers = this.drawingOptions.layers.length;
       const lastLayer = this.drawingOptions.layers[lenOfLayers - 1];
       const fixed = this.definedOptions?.variables[lastLayer.varindex].fixed;
       if (!fixed) throw Error("Can't get fixed");
-      const shapedFixed = fixed.map((v) => v.split('/'));
-      let fixedIndex = Infinity;
+      const shapedFixed = fixed.map((v) => v.split("/"));
+      let fixedIndex = Number.POSITIVE_INFINITY;
       if (shapedFixed[0].length === 1) {
         fixedIndex = fixed.findIndex((v) => v === newFixed);
       } else {
-        const fixedNames = shapedFixed[0].map((v) => v.split('=')[0]);
+        const fixedNames = shapedFixed[0].map((v) => v.split("=")[0]);
         const fixedNamesIndex = fixedNames.findIndex((v) => v === slider.title);
         console.log(shapedFixed);
-        fixedIndex = shapedFixed.findIndex(
-          (v) => v[fixedNamesIndex] === newFixed  
-        );
+        fixedIndex = shapedFixed.findIndex((v) => v[fixedNamesIndex] === newFixed);
         console.log(fixedIndex);
       }
       if (fixedIndex === undefined) {
@@ -118,8 +116,7 @@ export default Vue.extend({
 
       if (hasIncrement) {
         const value = lastLayer.fixedindex + 1;
-        const lenOfFixedVariables =
-          this.definedOptions?.variables[lastLayer.varindex].fixed.length;
+        const lenOfFixedVariables = this.definedOptions?.variables[lastLayer.varindex].fixed.length;
         if (lenOfFixedVariables && value < lenOfFixedVariables) {
           lastLayer.fixedindex = value;
           this.sliders[sliderIndex].value = value;
@@ -143,7 +140,7 @@ export default Vue.extend({
             this.changeURL(sliderIndex, true);
           },
           delay,
-          sliderIndex
+          sliderIndex,
         );
       } else {
         clearInterval(this.intervalID);
@@ -166,9 +163,9 @@ export default Vue.extend({
         this.name = layer.name;
         const variable = this.definedOptions.variables[layer.varindex];
         const fixed = variable.fixed;
-        const dims = fixed.map((v) => v.split('/')).flat();
+        const dims = fixed.flatMap((v) => v.split("/"));
         for (const dim of dims) {
-          const [dName, dValue] = dim.split('=');
+          const [dName, dValue] = dim.split("=");
           const pIndex = this.sliders.findIndex((v) => v.title === dName);
           if (pIndex === -1) {
             this.sliders.push({
@@ -176,9 +173,7 @@ export default Vue.extend({
               title: dName,
               tick_label: [dValue],
             });
-          } else if (
-            !this.sliders[pIndex].tick_label.find((v) => v === dValue)
-          ) {
+          } else if (!this.sliders[pIndex].tick_label.find((v) => v === dValue)) {
             this.sliders[pIndex].max += 1;
             this.sliders[pIndex].tick_label.push(dValue);
           }

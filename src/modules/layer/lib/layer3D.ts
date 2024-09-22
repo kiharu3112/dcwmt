@@ -1,11 +1,8 @@
-import { UrlTemplateImageryProvider } from 'cesium';
-import { Diagram } from '../diagram/diagram';
-import { LayerInterface } from './LayerInterface';
+import { UrlTemplateImageryProvider } from "cesium";
+import type { Diagram } from "../diagram/diagram";
+import type { LayerInterface } from "./LayerInterface";
 
-export class Layer3D
-  extends UrlTemplateImageryProvider
-  implements LayerInterface
-{
+export class Layer3D extends UrlTemplateImageryProvider implements LayerInterface {
   public minmax: [number, number] | undefined;
 
   constructor(
@@ -16,10 +13,10 @@ export class Layer3D
     zoomLevel: { min: number; max: number },
     public show: boolean,
     opacity: number,
-    private readonly diagram: Diagram
+    private readonly diagram: Diagram,
   ) {
     const options: UrlTemplateImageryProvider.ConstructorOptions = {
-      url: '',
+      url: "",
       tileWidth: tileSize.x,
       tileHeight: tileSize.y,
       maximumLevel: zoomLevel.max,
@@ -37,7 +34,7 @@ export class Layer3D
       urls.push(url.concat(`/${this.fixed}/${level}/${x}/${y}.png`));
     }
 
-    const canvas = document.createElement('canvas');
+    const canvas = document.createElement("canvas");
     [canvas.width, canvas.height] = [this.tileWidth, super.tileHeight];
 
     const drawnCanvas = this.diagram.draw(urls, canvas);

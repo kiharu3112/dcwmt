@@ -8,11 +8,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import drawer_load from './DrawerContents/Drawer-load/Drawer-load.vue';
-import drawer_math from './DrawerContents/Drawer-math/Drawer-math.vue';
-import drawer_colormap from './DrawerContents/Drawer-colormap/Drawer-colormap.vue';
-import drawer_figure from './DrawerContents/Drawer-figure/Drawer-figure.vue';
+import Vue from "vue";
+import drawer_colormap from "./DrawerContents/Drawer-colormap/Drawer-colormap.vue";
+import drawer_figure from "./DrawerContents/Drawer-figure/Drawer-figure.vue";
+import drawer_load from "./DrawerContents/Drawer-load/Drawer-load.vue";
+import drawer_math from "./DrawerContents/Drawer-math/Drawer-math.vue";
 
 export default Vue.extend({
   components: {

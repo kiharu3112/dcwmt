@@ -6,7 +6,7 @@ export abstract class Diagram {
 
   constructor(minmax?: [number, number]) {
     if (!minmax || (minmax[0] === 0 && minmax[1] === 0)) {
-      this.minmax = [Infinity, -Infinity];
+      this.minmax = [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY];
     } else {
       this.minmax = minmax;
     }
@@ -20,23 +20,23 @@ export abstract class Diagram {
    *
    * @returns A canvases to drawing Numerical Data Tile(same tile of param canvas).
    */
-  private async fetchImages(
-    urls: string[],
-    size: { width: number; height: number }
-  ): Promise<HTMLCanvasElement[]> {
+  private async fetchImages(urls: string[], size: { width: number; height: number }): Promise<HTMLCanvasElement[]> {
     const canvases = new Array<HTMLCanvasElement>(urls.length);
     const promises = new Array<Promise<HTMLCanvasElement>>();
 
     for (let i = 0; i < urls.length; i++) {
-      canvases[i] = document.createElement('canvas');
+      canvases[i] = document.createElement("canvas");
       canvases[i].width = size.width;
       canvases[i].height = size.height;
-      const context = canvases[i].getContext('2d')!;
+      const context = canvases[i].getContext("2d");
+      if (!context) {
+        throw new Error("Failed to get 2d context from canvas.");
+      }
 
       const promise = new Promise<HTMLCanvasElement>((resolve, reject) => {
         try {
           const img = new Image();
-          img.crossOrigin = 'anonymous';
+          img.crossOrigin = "anonymous";
           img.width = size.width;
           img.height = size.height;
           img.onload = () => {
@@ -63,12 +63,15 @@ export abstract class Diagram {
    * @returns an array of Numerical Data.
    */
   private getNumData(canvas: HTMLCanvasElement): number[] {
-    const context = canvas.getContext('2d')!;
+    const context = canvas.getContext("2d");
+    if (!context) {
+      throw new Error("Failed to get 2d context from canvas.");
+    }
 
     const rgba = context.getImageData(0, 0, canvas.width, canvas.height).data;
     const dataView = new DataView(new ArrayBuffer(32));
     const datas = new Array<number>();
-    const isCalcMinMax = !isFinite(this.minmax[0]);
+    const isCalcMinMax = !Number.isFinite(this.minmax[0]);
 
     for (let i = 0; i < canvas.width * canvas.height; i++) {
       // Get RGB value of each pixel from Numerical Data Tile
@@ -106,31 +109,22 @@ export abstract class Diagram {
    * */
   protected abstract drawVisualizedDiagramBasedONNumData(
     datas: number[][],
-    canvas: HTMLCanvasElement
+    canvas: HTMLCanvasElement,
   ): HTMLCanvasElement;
 
-  public async draw(
-    urls: string[],
-    canvas: HTMLCanvasElement
-  ): Promise<HTMLCanvasElement> {
+  public async draw(urls: string[], canvas: HTMLCanvasElement): Promise<HTMLCanvasElement> {
     const size = { width: canvas.width, height: canvas.height };
     const imgs = await this.fetchImages(urls, size);
 
     const datas = imgs.map((img) => this.getNumData(img));
 
-    const visualizedDiagram = this.drawVisualizedDiagramBasedONNumData(
-      datas,
-      canvas
-    );
+    const visualizedDiagram = this.drawVisualizedDiagramBasedONNumData(datas, canvas);
 
     return visualizedDiagram;
   }
 
-  public calcMinMax = async (
-    urls: string[],
-    canvas: HTMLCanvasElement
-  ): Promise<[number, number]> => {
-    if (isFinite(this.minmax[0])) {
+  public calcMinMax = async (urls: string[], canvas: HTMLCanvasElement): Promise<[number, number]> => {
+    if (Number.isFinite(this.minmax[0])) {
       return new Promise((resolve) => resolve(this.minmax));
     }
     const size = { width: canvas.width, height: canvas.height };
@@ -140,9 +134,5 @@ export abstract class Diagram {
     return new Promise((resolve) => resolve(this.minmax));
   };
 
-  public abstract whichDiagram<T, U, V>(
-    tone: T,
-    contour: U,
-    vector: V
-  ): T | U | V;
+  public abstract whichDiagram<T, U, V>(tone: T, contour: U, vector: V): T | U | V;
 }

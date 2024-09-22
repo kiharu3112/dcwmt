@@ -22,15 +22,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue from "vue";
 
 export default Vue.extend({
   data() {
     return {
       mathmaticalMethods: [
-        { name: '通常', method: (x: number) => x },
-        { name: 'log10', method: (x: number) => Math.log10(x) },
-        { name: 'sqrt', method: (x: number) => Math.sqrt(x) },
+        { name: "通常", method: (x: number) => x },
+        { name: "log10", method: (x: number) => Math.log10(x) },
+        { name: "sqrt", method: (x: number) => Math.sqrt(x) },
       ],
     };
   },
@@ -41,7 +41,7 @@ export default Vue.extend({
       },
       set: function (value: { name: string; method: (x: number) => number }) {
         const props = { mathMethod: value.method };
-        this.$store.commit('setDrawingOptions', props);
+        this.$store.commit("setDrawingOptions", props);
       },
     },
   },

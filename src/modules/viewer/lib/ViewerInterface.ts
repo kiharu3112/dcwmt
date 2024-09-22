@@ -1,5 +1,5 @@
-import { LayerTypes } from '@/dcmwtconfType';
-import { LayerController } from '../../layer/LayerController';
+import type { LayerTypes } from "@/dcmwtconfType";
+import type { LayerController } from "../../layer/LayerController";
 
 export interface ViewerInterface {
   /**

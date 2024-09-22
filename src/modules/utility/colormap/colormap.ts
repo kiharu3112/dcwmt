@@ -1,4 +1,4 @@
-import { clrmap } from '../../../components/DrawerContents/Drawer-colormap/colormap_lib';
+import { clrmap } from "../../../components/DrawerContents/Drawer-colormap/colormap_lib";
 
 export type Clrmap = {
   r: number;
@@ -23,7 +23,7 @@ export class ColorMap {
   };
 
   draw = (width: number, height: number) => {
-    const canvas = document.createElement('canvas');
+    const canvas = document.createElement("canvas");
     [canvas.width, canvas.height] = [width, height];
 
     const clrmap = this.getClrmap();
@@ -40,14 +40,9 @@ export class ColorMap {
     return canvas;
   };
 
-  private drawTriangle = (
-    canvas: HTMLCanvasElement,
-    color: Clrmap,
-    width: number,
-    height: number,
-    isLeft: boolean
-  ) => {
-    const context: CanvasRenderingContext2D = canvas.getContext('2d')!;
+  private drawTriangle = (canvas: HTMLCanvasElement, color: Clrmap, width: number, height: number, isLeft: boolean) => {
+    const context: CanvasRenderingContext2D | null = canvas.getContext("2d");
+    if (!context) return;
 
     context.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
 
@@ -75,9 +70,12 @@ export class ColorMap {
     x: number,
     y: number,
     width: number,
-    height: number
+    height: number,
   ) => {
-    const context: CanvasRenderingContext2D = canvas.getContext('2d')!;
+    const context: CanvasRenderingContext2D | null = canvas.getContext("2d");
+    if (!context) {
+      throw new Error("Failed to get 2d context");
+    }
     context.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
     context.fillRect(x, y, width, height);
   };

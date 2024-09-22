@@ -1,8 +1,8 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from "vue";
+import Vuex from "vuex";
 
-import { DrawingOptions, DefinedOptions } from '../dcmwtconfType';
-import { ViewerController } from '@/modules/viewer/ViewerController';
+import type { ViewerController } from "@/modules/viewer/ViewerController";
+import type { DefinedOptions, DrawingOptions } from "../dcmwtconfType";
 
 Vue.use(Vuex);
 
