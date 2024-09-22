@@ -14,13 +14,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import dcwmt_map from './Dcwmt-map.vue';
+import type { ViewerController } from "@/modules/viewer/ViewerController";
+import Vue from "vue";
+import dcwmt_footer from "./Dcwmt-footer.vue";
+import dcwmt_map from "./Dcwmt-map.vue";
 //import dcwmt_legend from './Dcwmt-legends.vue';
-import dcwmt_navigationdrawer from './Dcwmt-navigationdrawer.vue';
-import tab from './Tab.vue';
-import dcwmt_footer from './Dcwmt-footer.vue';
-import { ViewerController } from '@/modules/viewer/ViewerController';
+import dcwmt_navigationdrawer from "./Dcwmt-navigationdrawer.vue";
+import tab from "./Tab.vue";
 
 type AppDataType = {
   canDraw: boolean;
@@ -38,7 +38,7 @@ export default Vue.extend({
   data(): AppDataType {
     return {
       canDraw: false,
-      nowlink: '',
+      nowlink: "",
     };
   },
   methods: {
@@ -50,10 +50,10 @@ export default Vue.extend({
     },
   },
   computed: {
-    viewerController: function(): ViewerController | undefined {
+    viewerController: function (): ViewerController | undefined {
       // @ts-ignore
       return this.$refs.map?.viewerController;
-    }
-  }
+    },
+  },
 });
 </script>

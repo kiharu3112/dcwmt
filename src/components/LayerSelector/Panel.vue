@@ -115,10 +115,10 @@
 </template>
 
 <script lang="ts">
-import { LayerTypes } from '@/dcmwtconfType';
-import ColorBar from '../DrawerContents/Drawer-colormap/Colorbar.vue';
-import DcwmtColormap from '../DrawerContents/Drawer-colormap/Drawer-colormap.vue';
-import Vue from 'vue';
+import type { LayerTypes } from "@/dcmwtconfType";
+import Vue from "vue";
+import ColorBar from "../DrawerContents/Drawer-colormap/Colorbar.vue";
+import DcwmtColormap from "../DrawerContents/Drawer-colormap/Drawer-colormap.vue";
 
 export default Vue.extend({
   components: { ColorBar, DcwmtColormap },
@@ -128,9 +128,7 @@ export default Vue.extend({
     };
   },
   methods: {
-    canRaise: function (index: number) {
-      return index > 0;
-    },
+    canRaise: (index: number) => index > 0,
     canLower: function (index: number) {
       return index >= 0 && index < this.layers.length - 1;
     },
@@ -151,7 +149,7 @@ export default Vue.extend({
       const layer = this.layers[layerIndex];
       //@ts-ignore
       const selected = this.$refs.colormap[0].selected;
-      if (layer.type === 'tone' && isFinite(selected)) {
+      if (layer.type === "tone" && Number.isFinite(selected)) {
         layer.clrindex = selected;
         this.$set(this.layers, layerIndex, layer);
       }
@@ -166,19 +164,17 @@ export default Vue.extend({
       set: function (value: LayerTypes[]) {
         const drawingOptions = this.$store.getters.drawingOptions;
         const layers = value;
-        this.$store.commit('setDrawingOptions', {
+        this.$store.commit("setDrawingOptions", {
           ...drawingOptions,
           layers,
         });
       },
     },
-    colorBarSize: function () {
-      return {
-        width: '80%',
-        height: '20%',
-        marginTop: '10px',
-      };
-    },
+    colorBarSize: () => ({
+      width: "80%",
+      height: "20%",
+      marginTop: "10px",
+    }),
   },
 });
 </script>

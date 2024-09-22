@@ -11,9 +11,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { DefinedOptions, DrawingOptions } from '../../../dcmwtconfType';
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid } from "uuid";
+import Vue from "vue";
+import type { DefinedOptions, DrawingOptions } from "../../../dcmwtconfType";
 
 type ConfData = {
   definedOptions: DefinedOptions;
@@ -32,27 +32,26 @@ export default Vue.extend({
   computed: {
     droppedInfo: function () {
       if (!this.loadedData) {
-        return '';
-      } else {
-        let str = '';
-        const title = 'Dropped Data Info\n';
-        str += title;
-        const mapTitle = `Title: ${this.loadedData.drawingOptions.title}\n`;
-        str += mapTitle;
-        const layerTitle = 'Layers:\n';
-        str += layerTitle;
-        this.loadedData.drawingOptions.layers.forEach((layer, index) => {
-          str += `\t${index + 1}. ${layer.name}\n`;
-        });
-        return str;
+        return "";
       }
+      let str = "";
+      const title = "Dropped Data Info\n";
+      str += title;
+      const mapTitle = `Title: ${this.loadedData.drawingOptions.title}\n`;
+      str += mapTitle;
+      const layerTitle = "Layers:\n";
+      str += layerTitle;
+      this.loadedData.drawingOptions.layers.forEach((layer, index) => {
+        str += `\t${index + 1}. ${layer.name}\n`;
+      });
+      return str;
     },
     drawingOptions: {
       get: function () {
         return this.$store.getters.drawingOptions;
       },
       set: function (value: DrawingOptions) {
-        this.$store.commit('setDrawingOptions', value);
+        this.$store.commit("setDrawingOptions", value);
       },
     },
     definedOptions: {
@@ -60,14 +59,14 @@ export default Vue.extend({
         return this.$store.getters.definedOptions;
       },
       set: function (value: DefinedOptions) {
-        this.$store.commit('setDefinedOptions', value);
+        this.$store.commit("setDefinedOptions", value);
       },
     },
   },
   methods: {
     loading: function () {
       if (!this.loadedData) {
-        throw new Error('Dropped an unexpected JSON Data');
+        throw new Error("Dropped an unexpected JSON Data");
       }
       this.loadedData.drawingOptions.id = uuid();
       for (let i = 0; i < this.loadedData.drawingOptions.layers.length; i++) {
@@ -82,27 +81,20 @@ export default Vue.extend({
     const dropzone = this.$el;
 
     // JSONファイルがドラッグされた際に, 無駄な処理を防ぐ
-    [
-      'drag',
-      'dragstart',
-      'dragend',
-      'dragover',
-      'dragenter',
-      'dragleave',
-    ].forEach((keyword) => {
+    for (const keyword of ["drag", "dragstart", "dragend", "dragover", "dragenter", "dragleave"]) {
       //@ts-ignore
       dropzone.addEventListener(keyword, (event: DragEvent) => {
         event.preventDefault();
         event.stopPropagation();
       });
-    });
+    }
 
     //@ts-ignore
-    dropzone.addEventListener('drop', (event: DragEvent) => {
+    dropzone.addEventListener("drop", (event: DragEvent) => {
       event.preventDefault();
 
       if (!event.dataTransfer) {
-        throw new Error('Dropped data is unexpected.');
+        throw new Error("Dropped data is unexpected.");
       }
 
       if (event.dataTransfer.files.length > 0) {
@@ -111,14 +103,14 @@ export default Vue.extend({
         fileReader.readAsText(file);
         fileReader.onload = () => {
           if (!fileReader.result) {
-            throw new Error('Dropped an unexpected JSON Data');
+            throw new Error("Dropped an unexpected JSON Data");
           }
           this.loadedData = JSON.parse(fileReader.result as string);
         };
       } else {
-        const data = event.dataTransfer?.getData('text/plain');
+        const data = event.dataTransfer?.getData("text/plain");
         if (!data) {
-          throw new Error('Dropped an unexpected JSON Data');
+          throw new Error("Dropped an unexpected JSON Data");
         }
         this.loadedData = JSON.parse(data);
       }

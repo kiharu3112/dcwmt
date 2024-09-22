@@ -14,9 +14,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import dcwmt_animation from './Dcwmt-animation.vue';
-import { DrawingOptions } from '@/dcmwtconfType';
+import type { DrawingOptions } from "@/dcmwtconfType";
+import Vue from "vue";
+import dcwmt_animation from "./Dcwmt-animation.vue";
 
 type DataType = {
   textValue: string;
@@ -28,13 +28,13 @@ export default Vue.extend({
   },
   data(): DataType {
     return {
-      textValue: '',
+      textValue: "",
     };
   },
   computed: {
     drawingOptions: {
       set: function (value: DrawingOptions) {
-        this.$store.commit('setDrawingOptions', value);
+        this.$store.commit("setDrawingOptions", value);
       },
       get: function () {
         return this.$store.getters.drawingOptions;
@@ -60,7 +60,7 @@ export default Vue.extend({
       const zoom = viewer.zoom;
       const title = this.textValue;
       if (title.length <= 0) {
-        alert('タイトルを入力してください.');
+        alert("タイトルを入力してください.");
         return;
       }
 
@@ -70,19 +70,22 @@ export default Vue.extend({
 
       // Download json file
       const json = JSON.stringify(confFile);
-      const blob = new Blob([json], { type: 'application/json' });
-      const aEl = document.createElement('a');
+      const blob = new Blob([json], { type: "application/json" });
+      const aEl = document.createElement("a");
       aEl.href = window.URL.createObjectURL(blob);
-      aEl.download = 'dcwmtmap.json';
+      aEl.download = "dcwmtmap.json";
       aEl.click();
       aEl.remove();
 
-      this.textValue = '';
+      this.textValue = "";
     },
     getSumNailImageData: function () {
-      const map = document.getElementById('map')!;
+      const map = document.getElementById("map");
+      if (!map) {
+        throw new Error("Failed to get map element.");
+      }
       const canvas = this.getCanvasElement(map) as HTMLCanvasElement;
-      return canvas.toDataURL('image/png');
+      return canvas.toDataURL("image/png");
     },
     getCanvasElement: function (ele: Element): Element {
       if (ele.childElementCount <= 0) {

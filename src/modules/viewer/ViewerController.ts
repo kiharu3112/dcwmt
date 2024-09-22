@@ -1,9 +1,9 @@
-import { WmtsLibIdentifer } from '../utility/wmtsLibIdentifer';
-import { Viewer3D } from './lib/viewer3D';
+import { WmtsLibIdentifer } from "../utility/wmtsLibIdentifer";
+import { Viewer3D } from "./lib/viewer3D";
 // import { viewerCartesian } from './lib/viewerCartesian';
-import { ViewerProjection } from './lib/viewerProjection';
+import { ViewerProjection } from "./lib/viewerProjection";
 
-import { ProjCodes } from '../../components/DrawerContents/Drawer-figure/projection_lib';
+import type { ProjCodes } from "../../components/DrawerContents/Drawer-figure/projection_lib";
 
 export class ViewerController {
   private readonly wli: WmtsLibIdentifer;
@@ -13,12 +13,12 @@ export class ViewerController {
     public projCode: ProjCodes,
     private readonly zoomNativeLevel: { min: number; max: number },
     private readonly zoom: number,
-    private readonly center: [number, number]
+    private readonly center: [number, number],
   ) {
-    if (this.projCode === '3d Sphere') {
+    if (this.projCode === "3d Sphere") {
       this.wli = new WmtsLibIdentifer(this.projCode);
     } else {
-      this.wli = new WmtsLibIdentifer('Projections');
+      this.wli = new WmtsLibIdentifer("Projections");
     }
   }
 
@@ -32,13 +32,7 @@ export class ViewerController {
   };
 
   private getViewerWithSuitableLib = (mapEl: HTMLDivElement) => {
-    const prop = [
-      mapEl,
-      this.projCode,
-      this.zoomNativeLevel,
-      this.zoom,
-      this.center,
-    ] as const;
+    const prop = [mapEl, this.projCode, this.zoomNativeLevel, this.zoom, this.center] as const;
     const sphere = () => new Viewer3D(mapEl, this.center);
     const projections = () => new ViewerProjection(...prop);
     const suitableFunc = this.wli.whichLib(sphere, projections);

@@ -7,19 +7,18 @@
 
 <script>
 export default {
-    props: ["viewer"],
-    data: () => ({
-        vertical: "vertical",
-        holizonal: "holizonal"
-    }),
-    mounted: function () {
-        Array.prototype.forEach.call(this.$el.children, ele => {
-            if ( ele.id === this.vertical ) {
-                
-            }
-        })
-    }
-}
+  props: ["viewer"],
+  data: () => ({
+    vertical: "vertical",
+    holizonal: "holizonal",
+  }),
+  mounted: function () {
+    Array.prototype.forEach.call(this.$el.children, (ele) => {
+      if (ele.id === this.vertical) {
+      }
+    });
+  },
+};
 </script>
 
 <style scoped>

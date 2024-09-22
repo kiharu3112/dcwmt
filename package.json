@@ -7,7 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode development --devtool=source-map",
     "prod": "webpack --mode production",
-    "serve": "webpack serve"
+    "serve": "webpack serve",
+    "format": "biome format --write src/",
+    "lint": "biome lint --write src/",
+    "check": "biome check --write src/"
   },
   "repository": {
     "type": "git",
@@ -22,6 +25,7 @@
   "devDependencies": {
     "@babel/core": "^7.19.1",
     "@babel/preset-env": "^7.19.1",
+    "@biomejs/biome": "1.9.2",
     "@microsoft/tsdoc": "^0.14.2",
     "@types/d3-contour": "^3.0.1",
     "@types/d3-geo": "^3.0.2",

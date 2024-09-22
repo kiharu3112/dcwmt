@@ -14,9 +14,9 @@
 </template>
 
 <script lang="ts">
-import { DrawingOptions } from '@/dcmwtconfType';
-import Vue from 'vue';
-import { ProjCodes, Projection, projections } from './projection_lib';
+import type { DrawingOptions } from "@/dcmwtconfType";
+import Vue from "vue";
+import { type ProjCodes, type Projection, projections } from "./projection_lib";
 
 type DrawerFigureDataType = {
   selected: Projection;
@@ -29,15 +29,13 @@ export default Vue.extend({
     };
   },
   computed: {
-    projections: function () {
-      return projections;
-    },
+    projections: () => projections,
     drawingOptions: {
       get: function (): DrawingOptions {
         return this.$store.getters.drawingOptions;
       },
       set: function (value: DrawingOptions) {
-        this.$store.commit('setDrawingOptions', value);
+        this.$store.commit("setDrawingOptions", value);
       },
     },
   },
