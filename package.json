@@ -26,7 +26,7 @@
     "@babel/core": "^7.19.1",
     "@babel/preset-env": "^7.19.1",
     "@biomejs/biome": "1.9.2",
-    "@microsoft/tsdoc": "^0.14.2",
+    "@microsoft/tsdoc": "^0.15.0",
     "@types/d3-contour": "^3.0.1",
     "@types/d3-geo": "^3.0.2",
     "@types/openlayers": "^4.6.18",
