@@ -5,18 +5,22 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import layerselecter from "./LayerSelector/Layerselecter.vue";
+import Vue from 'vue';
+import layerselecter from './LayerSelector/Layerselecter.vue';
 
-import type { DefinedOptions, DrawingOptions, LayerTypes, Variable } from "../dcmwtconfType";
-import { LayerController } from "../modules/layer/LayerController";
-import { ViewerController } from "../modules/viewer/ViewerController";
-import { mapDiv } from "../modules/viewer/map";
+import type {
+  DefinedOptions,
+  DrawingOptions,
+  LayerTypes,
+  Variable,
+} from '../dcmwtconfType';
+import { LayerController } from '../modules/layer/LayerController';
+import { ViewerController } from '../modules/viewer/ViewerController';
+import { mapDiv } from '../modules/viewer/map';
 
 export default Vue.extend({
   components: {
     layerselecter,
-    //    ruler,
   },
   computed: {
     drawingOptions: {
@@ -24,7 +28,7 @@ export default Vue.extend({
         return this.$store.getters.drawingOptions;
       },
       set: function (value: DrawingOptions) {
-        this.$store.commit("setDrawingOptions", value);
+        this.$store.commit('setDrawingOptions', value);
       },
     },
     definedOptions: function () {
@@ -41,7 +45,7 @@ export default Vue.extend({
         return this.$store.getters.viewerController;
       },
       set: function (value: ViewerController) {
-        this.$store.commit("setViewerController", value);
+        this.$store.commit('setViewerController', value);
       },
     },
   },
@@ -56,33 +60,34 @@ export default Vue.extend({
       min: Math.max(...definedOptions.variables.map((v) => v.minZoom)),
       max: Math.min(...definedOptions.variables.map((v) => v.maxZoom)),
     }),
-    draw: async function (viewerController: ViewerController, layerController: LayerController) {
+    draw: async function (
+      viewerController: ViewerController,
+      layerController: LayerController
+    ) {
       if (!this.definedOptions) {
-        throw new Error("Failed to run read_configfile method.");
+        throw new Error('Failed to run read_configfile method.');
       }
 
       const mapEl = mapDiv.create();
       mapDiv.mount(mapEl);
       const viewer = viewerController.create(mapEl);
       if (!viewer) {
-        throw new Error("Failed to create viewer.");
+        throw new Error('Failed to create viewer.');
       }
-
+      console.log('drawingOptions.layers: ', this.drawingOptions.layers);
       for (const layerOption of this.drawingOptions.layers) {
-        const props = this.createPropsForCreateLayerMethod(layerOption, this.definedOptions.variables);
+        const props = this.createPropsForCreateLayerMethod(
+          layerOption,
+          this.definedOptions.variables
+        );
         const layer = await layerController.create(...props);
         layerController.add(layer);
       }
-
-      //const extent = this.definedOptions.variables[0].extent;
-      //const graticule = layerController.graticule(extent);
-      //layerController.add(graticule);
-
       viewer.register(layerController);
     },
     createController() {
       if (!this.definedOptions) {
-        throw new Error("definedOptions is undefined");
+        throw new Error('definedOptions is undefined');
       }
       const zoomNativeLevel = this.getZoomNativeLevel(this.definedOptions);
 
@@ -90,24 +95,34 @@ export default Vue.extend({
         this.drawingOptions.projCode,
         zoomNativeLevel,
         this.drawingOptions.zoom,
-        this.drawingOptions.center,
+        this.drawingOptions.center
       );
-      const layerController = new LayerController(this.definedOptions.root, this.drawingOptions.projCode);
+      const layerController = new LayerController(
+        this.definedOptions.root,
+        this.drawingOptions.projCode
+      );
 
       return { viewerController, layerController };
     },
     createPropsForCreateLayerMethod(layer: LayerTypes, variables: Variable[]) {
       const variable = variables[layer.varindex];
+      console.log('variable is ', variable);
       const fixed = variable.fixed[layer.fixedindex];
-      const url_ary = variable.name.map((v) => `${this.definedOptions?.root}/${v}`);
+      const url_ary = variable.name.map(
+        (v) => `${this.definedOptions?.root}/${v}`
+      );
       const diagramProps = (() => {
         switch (layer.type) {
-          case "tone":
+          case 'tone':
             return layer.clrindex;
-          case "vector":
+          case 'vector':
             return layer.vecinterval;
-          case "contour":
+          case 'contour':
             return layer.thretholdinterval;
+          case 'normal':
+            return undefined;
+          default:
+            return undefined;
         }
       })();
 
@@ -128,16 +143,18 @@ export default Vue.extend({
   },
   watch: {
     drawingOptions: {
-      handler: async function (newOptions: DrawingOptions, oldOptions: DrawingOptions | undefined) {
+      handler: async function (
+        newOptions: DrawingOptions,
+        oldOptions: DrawingOptions | undefined
+      ) {
         if (!oldOptions || newOptions.id !== oldOptions.id) {
           await this.initialize();
         } else if (newOptions.projCode !== oldOptions.projCode) {
           const zoom = Math.round(this.viewerController?.get()?.zoom);
           const center = this.viewerController?.get()?.center;
           if (zoom === undefined || !center) {
-            throw new Error("zoom / center is undefined");
+            throw new Error('zoom / center is undefined');
           }
-          //@ts-ignore
           this.drawingOptions = { ...this.drawingOptions, zoom, center };
 
           const controller = this.createController();

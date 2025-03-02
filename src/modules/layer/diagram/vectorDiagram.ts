@@ -138,8 +138,7 @@ export class VectorDiagram extends Diagram {
     });
   };
 
-  // @ts-ignore
-  public whichDiagram<T, U, V>(tone: T, contour: U, vector: V): T | U | V {
+  public whichDiagram<T, U, V, N>(vector: V): T | U | V | N {
     return vector;
   }
 }

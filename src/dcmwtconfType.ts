@@ -1,7 +1,7 @@
-import type { ProjCodes } from "./components/DrawerContents/Drawer-figure/projection_lib";
+import type { ProjCodes } from './components/DrawerContents/Drawer-figure/projection_lib';
 
-const types = ["tone", "vector", "contour"] as const;
-export type DiagramTypes = (typeof types)[number];
+const types = ['tone', 'vector', 'contour', 'normal'] as const;
+export type DiagramTypes = typeof types[number];
 
 export type Variable = {
   name: [string, string];
@@ -25,12 +25,12 @@ type Layer = {
 };
 
 type LayerTone = Layer & {
-  type: "tone";
+  type: 'tone';
   clrindex: number;
 };
 
 type LayerVector = Layer & {
-  type: "vector";
+  type: 'vector';
   vecinterval: {
     x: number;
     y: number;
@@ -38,11 +38,15 @@ type LayerVector = Layer & {
 };
 
 type LayerContour = Layer & {
-  type: "contour";
+  type: 'contour';
   thretholdinterval: number;
 };
 
-export type LayerTypes = LayerTone | LayerVector | LayerContour;
+type LayerNormal = Layer & {
+  type: 'normal';
+};
+
+export type LayerTypes = LayerTone | LayerVector | LayerContour | LayerNormal;
 
 export type DefinedOptions = Readonly<{
   root: string;

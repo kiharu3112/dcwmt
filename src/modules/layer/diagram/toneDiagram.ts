@@ -56,8 +56,7 @@ export class ToneDiagram extends Diagram {
     return this.colormap[colormap_index]; // それ以外は対応する色を返す
   };
 
-  //@ts-ignore
-  public whichDiagram<T, U, V>(tone: T, contour: U, vector: V): T | U | V {
+  public whichDiagram<T, U, V, N>(tone: T): T | U | V | N {
     return tone;
   }
 }
